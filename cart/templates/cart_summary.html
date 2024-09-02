@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+    {% block content %}
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Shopping cart</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">View your cart</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+          <br><br><br>
+          {% if cart_products %}
+          {% for product in cart_products %}
+          <div class="card mb-3 col-md-8">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8 ">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{product.description}}</p>
+                    <p class="card-text">R{{product.price}}</p>
+                    <div class="row justify-content-center">
+                      <div class="col-md-3">
+                        Quantity 
+                      </div>
+                      <div class="col-md-3">
+                        <select class="form-select" id="select{{product.id}}">
+                          <option selected>
+                            {% for key, value in quantities.items %}
+                              {% if key == product.id|slugify %}
+                              {{ value }}
+                              {% endif %}
+                            {% endfor %}
+                          </option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                        </select>
+                      </div>
+                     </div>
+                    <a href="{% url 'home' %}" class = "btn btn-secondary">Back</a>
+                    <button type="button" data-index="{{product.id}}" class="btn btn-secondary update-cart">Update</button>
+                    <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          {% endfor %}
+          <h5 class="display-5">Total: R{{ totals }}</h3>
+            <a href="{% url 'checkout' %}" class="btn btn-success">Checkout</a>
+            <br><br><br>
+          {% else %}
+          <h2 class="display-5"><center>Your cart is empty</center></h2>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+          {% endif %}
+     </div>
+
+
+       <script>
+        //check if button is pressed
+  $(document).on('click', '.update-cart', function(e){
+    e.preventDefault();
+    var productid = $(this).data('index');
+    $.ajax({
+      type: 'POST',
+      url: '{% url 'cart_update' %}',
+      data: {
+        product_id: $(this).data('index'),
+        product_qty: $('#select' + productid + ' option:selected').text(),
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        action: 'post'
+      },
+    
+    success: function(json){
+      // document.getElementById('cart_qty').textContent = json.cart_qty;
+      // console.log(json)
+      location.reload();
+    },
+    error: function (xhr, errmsg, err) {  
+
+    }
+  });
+  })
+
+  $(document).on('click', '.delete-product', function(e){
+    e.preventDefault();
+    //  var productid = $(this).data('index');
+    $.ajax({
+      type: 'POST',
+      url: '{% url 'cart_delete' %}',
+      data: {
+        product_id: $(this).data('index'),
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        action: 'post'
+      },
+    
+    success: function(json){
+      location.reload();
+    },
+    error: function (xhr, errmsg, err) {  
+
+    }
+  });
+  })
+       </script>
+    {%endblock%}

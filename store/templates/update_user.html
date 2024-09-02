@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+    {% block content %}
+    <br><br><br><br>
+        <div class="container col-md-5">
+            <h5 class="display-5">
+                <center>Update User Profile</center>
+            </h5>
+            <form class = "form-group form" method="POST">
+                {% csrf_token %}
+                {{user_form.as_p}}
+                <div class="form-group offset-md-2">
+                    <button type="submit" class="btn btn-dark btn-lg logbtn rounded-pill col-md-9" id="updatebtn">Update Profile</button>
+                    <br><br>
+                    <a href="{% url 'update_password' %}" class="btn btn-dark btn-lg logbtn rounded-pill col-md-9">Update Password</a>
+                </div>
+            </form>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <style>
+            .form{
+                
+                padding: 25px;
+                position: relative;
+
+            }
+        </style>
+{%endblock%}
+

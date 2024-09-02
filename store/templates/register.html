@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+    {% block content %}
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Create an Account</h1>
+                <p class="lead fw-normal text-white-50 mb-0">For brand new users</p>
+            </div>
+        </div>
+    </header>
+    <br>
+        <div class="container col-md-5">
+            <form class = "form-group" method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <div class="form-group offset-sm-2">
+                    <button type="submit" class="btn btn-dark btn-lg logbtn rounded-pill col-md-6 offset-sm-2" id="signupbtn">Sign Up</button>
+                </div>
+            </form>
+        </div>
+        <br><br><br><br><br><br><br><br>
+    {%endblock%}
